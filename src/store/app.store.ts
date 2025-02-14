@@ -7,7 +7,7 @@ interface AuthState {
 }
 
 export const useAppStore = create<AuthState>((set) => ({
-  isAuthenticated: localStorage.getItem('auth') === 'true', // Persist auth state
+  isAuthenticated: localStorage.getItem('auth') === 'true',
   login: () => {
     localStorage.setItem('auth', 'true');
     set({ isAuthenticated: true });
