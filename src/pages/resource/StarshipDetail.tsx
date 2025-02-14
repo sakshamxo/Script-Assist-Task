@@ -14,22 +14,22 @@ import {
   Tooltip,
 } from "@mantine/core";
 
-// Helper to parse query parameters
+
 const useQueryParams = () => {
   const query = new URLSearchParams(useLocation().search);
   return query;
 };
 
-// Global cache for additional data with limited size using LRU cache pattern
+
 const cache = new Map<string, any>();
 
-// Periodically clear cache to prevent memory issues
+
 setInterval(() => {
   cache.clear();
   console.log("Cache cleared to prevent memory issues");
-}, 600000); // Clears cache every 10 minutes
+}, 600000);
 
-// Fetch starship details
+
 const fetchStarshipDetails = async ({
   queryKey,
 }: {
@@ -49,7 +49,7 @@ const fetchStarshipDetails = async ({
   }
 };
 
-// Fetch additional data (e.g., pilots or films) with caching logic
+
 const fetchAdditionalData = async (urls: string[]) => {
   if (!urls || urls.length === 0) return [];
   try {
@@ -63,7 +63,7 @@ const fetchAdditionalData = async (urls: string[]) => {
           throw new Error(`Invalid data structure from ${url}`);
         cache.set(url, data);
 
-        // Limit cache size to prevent indefinite growth
+       
         if (cache.size > 100) {
           const firstKey = cache.keys().next().value;
           cache.delete(firstKey);
@@ -90,7 +90,7 @@ const StarshipDetail = () => {
     return <Text color="red">Error: Missing or invalid starship ID</Text>;
   }
 
-  // Fetch starship details
+
   const {
     data: starship,
     isLoading,
@@ -98,7 +98,7 @@ const StarshipDetail = () => {
     error,
   } = useQuery(["starship", id], fetchStarshipDetails);
 
-  // Fetch pilots
+ 
   const { data: pilots, isLoading: pilotsLoading } = useQuery(
     ["pilots", id],
     () => fetchAdditionalData(starship?.pilots || []),
@@ -107,7 +107,6 @@ const StarshipDetail = () => {
     }
   );
 
-  // Fetch films
   const { data: films, isLoading: filmsLoading } = useQuery(
     ["films", id],
     () => fetchAdditionalData(starship?.films || []),
